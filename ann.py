@@ -1,19 +1,9 @@
 # Artificial Neural Network
 
-# Installing Theano
-# pip install --upgrade --no-deps git+git://github.com/Theano/Theano.git
-
-# Installing Tensorflow
-# pip install tensorflow
-
-# Installing Keras
-# pip install --upgrade keras
-
 # Part 1 - Data Preprocessing
 
 # Importing the libraries
-import numpy as np
-import matplotlib.pyplot as plt
+
 import pandas as pd
 
 # Importing the dataset
@@ -41,10 +31,10 @@ sc = StandardScaler()
 X_train = sc.fit_transform(X_train)
 X_test = sc.transform(X_test)
 
-# Part 2 - Now let's make the ANN!
+# Part 2 - Building the ANN
 
 # Importing the Keras libraries and packages
-import keras
+
 from keras.models import Sequential
 from keras.layers import Dense
 
@@ -66,7 +56,7 @@ classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = [
 # Fitting the ANN to the Training set
 classifier.fit(X_train, y_train, batch_size = 10, epochs = 100)
 
-# Part 3 - Making predictions and evaluating the model
+# Part 3 - Testing the model - Making predictions and evaluating the model
 
 # Predicting the Test set results
 y_pred = classifier.predict(X_test)
@@ -75,3 +65,39 @@ y_pred = (y_pred > 0.5)
 # Making the Confusion Matrix
 from sklearn.metrics import confusion_matrix
 cm = confusion_matrix(y_test, y_pred)
+
+# Part 4 - Ploting, Saving and Loading the model
+
+#Ploting the model
+from keras.utils import plot_model
+plot_model(classifier.model, to_file='model.png')
+
+#Saving the model
+# serialize model to JSON
+model_json = classifier.model.to_json()
+with open("model.json", "w") as json_file:
+    json_file.write(model_json)
+# serialize weights to HDF5
+classifier.model.save_weights("model.h5")
+print("Saved model to disk")
+
+# later...
+
+# loading the model
+# load json and create model
+from keras.models import model_from_json
+json_file = open('model.json', 'r')
+loaded_model_json = json_file.read()
+json_file.close()
+loaded_model = model_from_json(loaded_model_json)
+# load weights into new model
+loaded_model.load_weights("model.h5")
+print("Loaded model from disk")
+
+# compile loaded model 
+classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
+
+# Predicting the Test set results with loaded model
+y_pred = loaded_model.predict(X_test)
+
+
