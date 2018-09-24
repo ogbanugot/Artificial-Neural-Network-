@@ -69,8 +69,8 @@ cm = confusion_matrix(y_test, y_pred)
 # Part 4 - Ploting, Saving and Loading the model
 
 #Ploting the model
-from keras.utils import plot_model
-plot_model(classifier.model, to_file='model.png')
+#from keras.utils import plot_model
+#plot_model(classifier.model, to_file='model.png')
 
 #Saving the model
 # serialize model to JSON
